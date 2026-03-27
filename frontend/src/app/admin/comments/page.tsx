@@ -56,7 +56,7 @@ export default function AdminCommentsPage() {
       }
     }
     void loadOverview();
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     async function loadComments() {
