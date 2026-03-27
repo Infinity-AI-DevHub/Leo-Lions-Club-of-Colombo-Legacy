@@ -46,10 +46,10 @@ import { JoinMotivationModule } from './join-motivation/join-motivation.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 8889,
-      username: 'root',
-      password: 'root',
+      host: '127.0.0.1',
+      port: 3306,
+      username: 'leo_lions_legacy',
+      password: 'DAms12/()=',
       database: 'leo_lions_legacy',
       entities: [
         AdminUser,

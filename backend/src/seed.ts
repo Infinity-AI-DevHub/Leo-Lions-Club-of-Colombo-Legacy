@@ -57,12 +57,12 @@ async function runSeed() {
   await dataSource.initialize();
 
   const adminRepo = dataSource.getRepository(AdminUser);
-  if (!(await adminRepo.findOne({ where: { email: 'admin@leolegacy.org' } }))) {
+  if (!(await adminRepo.findOne({ where: { email: 'admin@colombolegacy.org' } }))) {
     await adminRepo.save(
       adminRepo.create({
-        email: 'admin@leolegacy.org',
+        email: 'admin@colombolegacy.org',
         fullName: 'System Administrator',
-        passwordHash: await bcrypt.hash('Admin@123', 10),
+        passwordHash: await bcrypt.hash('col.legacy.2026', 10),
         role: 'SUPER_ADMIN',
       }),
     );
@@ -245,10 +245,10 @@ async function runSeed() {
   if (!(await contactRepo.findOne({ where: {} }))) {
     await contactRepo.save(
       contactRepo.create({
-        email: 'info@leolegacy.org',
+        email: 'info@colombolegacy.org',
         phone: '+94 77 123 4567',
         address: 'Colombo, Sri Lanka',
-        contactFormRecipientEmail: 'secretary@leolegacy.org',
+        contactFormRecipientEmail: 'secretary@colombolegacy.org',
       }),
     );
   }
@@ -264,7 +264,7 @@ async function runSeed() {
 
   await dataSource.destroy();
   // eslint-disable-next-line no-console
-  console.log('Seed completed. Admin login: admin@leolegacy.org / Admin@123');
+  console.log('Seed completed. Admin login: admin@colombolegacy.org / Admin@123');
 }
 
 runSeed().catch((error) => {

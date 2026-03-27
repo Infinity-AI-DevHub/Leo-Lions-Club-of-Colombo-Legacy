@@ -61,7 +61,7 @@ npm run seed
 
 This creates tables (via `synchronize: true`) and inserts sample data including:
 
-- **Admin login:** `admin@leolegacy.org` / `Admin@123`
+- **Admin login:** `admin@colombolegacy.org` / `Admin@123`
 - Sample leadership members, projects, events, blog posts, gallery, contact info, social links
 
 ### 4. Start the Backend (port 4000)
@@ -153,7 +153,7 @@ Entity values: `leadership`, `projects`, `events`, `galleryAlbums`, `galleryImag
 - Token expires after 8 hours
 - Password hashing with bcrypt
 - Protected admin routes via `JwtAuthGuard`
-- Default admin: `admin@leolegacy.org` / `Admin@123`
+- Default admin: `admin@colombolegacy.org` / `Admin@123`
 
 ---
 
