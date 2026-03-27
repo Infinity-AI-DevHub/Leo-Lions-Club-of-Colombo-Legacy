@@ -1,0 +1,264 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f4f9ff;
+  --foreground: #081427;
+  --brand-primary: #0f4c81;
+  --brand-secondary: #2a8fd2;
+  --brand-accent: #74c0ff;
+}
+
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 420px) {
+  html {
+    font-size: 13px;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-poppins);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), Arial, sans-serif;
+  scroll-behavior: smooth;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-poppins), Arial, sans-serif;
+}
+
+.prose-content p {
+  margin-bottom: 0.8rem;
+  line-height: 1.7;
+}
+
+.site-gradient-bg {
+  background:
+    radial-gradient(circle at 10% 10%, rgba(20, 86, 172, 0.2), transparent 40%),
+    radial-gradient(circle at 85% 15%, rgba(80, 170, 255, 0.2), transparent 45%),
+    linear-gradient(180deg, #f5f9ff 0%, #eef5ff 45%, #f5fbff 100%);
+}
+
+.glass-panel {
+  backdrop-filter: blur(16px);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.75) 0%,
+    rgba(255, 255, 255, 0.58) 100%
+  );
+  border: 1px solid rgba(148, 185, 228, 0.28);
+  box-shadow: 0 20px 45px rgba(18, 58, 104, 0.08);
+}
+
+.hero-glow {
+  position: relative;
+}
+
+.hero-glow::before {
+  content: "";
+  position: absolute;
+  inset: -22% -10% auto;
+  height: 60%;
+  border-radius: 9999px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(123, 199, 255, 0.45),
+    rgba(123, 199, 255, 0)
+  );
+  filter: blur(24px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-ambient-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(18px);
+  opacity: 0.45;
+  animation: heroOrbFloat 14s ease-in-out infinite;
+}
+
+.hero-orb-one {
+  top: -10%;
+  left: -6%;
+  width: 36rem;
+  height: 36rem;
+  background: radial-gradient(circle at 30% 30%, rgba(116, 217, 255, 0.9), rgba(116, 217, 255, 0));
+}
+
+.hero-orb-two {
+  right: -8%;
+  top: 14%;
+  width: 30rem;
+  height: 30rem;
+  background: radial-gradient(circle at 60% 40%, rgba(103, 137, 255, 0.75), rgba(103, 137, 255, 0));
+  animation-delay: -4s;
+}
+
+.hero-orb-three {
+  bottom: -22%;
+  left: 30%;
+  width: 28rem;
+  height: 28rem;
+  background: radial-gradient(circle at 50% 50%, rgba(24, 182, 227, 0.65), rgba(24, 182, 227, 0));
+  animation-delay: -8s;
+}
+
+.hero-shimmer {
+  position: absolute;
+  inset: -40% -35%;
+  background: linear-gradient(
+    110deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.12) 45%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  transform: translateX(-20%);
+  animation: heroShimmerSweep 8s ease-in-out infinite;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(157, 211, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(157, 211, 255, 0.07) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.7), transparent 78%);
+  animation: heroGridDrift 20s linear infinite;
+  opacity: 0.35;
+}
+
+.hero-content {
+  animation: heroContentRise 850ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.section-fade-up {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 650ms ease, transform 650ms ease;
+}
+
+.section-fade-up.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-hover {
+  transition: transform 250ms ease, box-shadow 250ms ease, border-color 250ms ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 32px rgba(12, 57, 107, 0.12);
+  border-color: rgba(68, 132, 202, 0.35);
+}
+
+.button-pop {
+  transition: transform 180ms ease, box-shadow 220ms ease, filter 220ms ease;
+}
+
+.button-pop:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px rgba(28, 93, 158, 0.25);
+  filter: saturate(1.05);
+}
+
+.page-enter {
+  animation: pageEnter 420ms ease-out;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes preloaderSlide {
+  0% {
+    transform: translateX(-120%);
+  }
+  50% {
+    transform: translateX(90%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+@keyframes heroOrbFloat {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -24px, 0) scale(1.06);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes heroShimmerSweep {
+  0% {
+    transform: translateX(-25%) rotate(0.001deg);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateX(25%) rotate(0.001deg);
+    opacity: 0.75;
+  }
+  100% {
+    transform: translateX(-25%) rotate(0.001deg);
+    opacity: 0.4;
+  }
+}
+
+@keyframes heroGridDrift {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+  100% {
+    background-position: 42px 42px, 42px 42px;
+  }
+}
+
+@keyframes heroContentRise {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
