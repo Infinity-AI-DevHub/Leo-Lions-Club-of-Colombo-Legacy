@@ -26,8 +26,8 @@ async function runSeed() {
   const dataSource = new DataSource({
     type: 'mysql',
     host: 'localhost',
-    port: 8889,
-    username: 'root',
+    port: 3306,
+    username: 'colombo_legacy',
     password: 'root',
     database: 'leo_lions_legacy',
     entities: [
