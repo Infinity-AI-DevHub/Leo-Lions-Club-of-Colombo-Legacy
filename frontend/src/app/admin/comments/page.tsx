@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AdminGuard } from '@/components/admin-guard';
 import { AdminShell } from '@/components/admin-shell';
 import { adminClient } from '@/lib/admin-api';
@@ -45,11 +45,10 @@ export default function AdminCommentsPage() {
   const [busyId, setBusyId] = useState<number | null>(null);
   const [notice, setNotice] = useState('');
 
-  const token = useMemo(() => localStorage.getItem('leo_admin_token') || '', []);
-
   useEffect(() => {
     async function loadOverview() {
       try {
+        const token = localStorage.getItem('leo_admin_token') || '';
         const result = await adminClient(token).get('/admin/interactions/overview');
         setOverview(result.data);
       } catch {
@@ -64,6 +63,7 @@ export default function AdminCommentsPage() {
       setLoading(true);
       setNotice('');
       try {
+        const token = localStorage.getItem('leo_admin_token') || '';
         const params = new URLSearchParams();
         if (targetType) params.set('targetType', targetType);
         if (search.trim()) params.set('search', search.trim());
@@ -80,7 +80,7 @@ export default function AdminCommentsPage() {
       void loadComments();
     }, 300);
     return () => clearTimeout(debounce);
-  }, [search, targetType, token]);
+  }, [search, targetType]);
 
   async function handleDelete(id: number) {
     const ok = window.confirm('Delete this comment permanently?');
@@ -88,6 +88,7 @@ export default function AdminCommentsPage() {
     setBusyId(id);
     setNotice('');
     try {
+      const token = localStorage.getItem('leo_admin_token') || '';
       await adminClient(token).delete(`/admin/interactions/comments/${id}`);
       setComments((prev) => prev.filter((item) => item.id !== id));
       setOverview((prev) => (prev ? { ...prev, totalComments: Math.max(0, prev.totalComments - 1) } : prev));
