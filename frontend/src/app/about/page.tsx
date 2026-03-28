@@ -53,11 +53,11 @@ export default async function AboutPage() {
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <h3 className="text-lg font-semibold text-sky-900">Vision</h3>
-            <p className="mt-2 text-slate-600">{about.vision}</p>
+            <p className="mt-2 whitespace-pre-line text-slate-600">{about.vision}</p>
           </Card>
           <Card>
             <h3 className="text-lg font-semibold text-sky-900">Mission</h3>
-            <p className="mt-2 text-slate-600">{about.mission}</p>
+            <p className="mt-2 whitespace-pre-line text-slate-600">{about.mission}</p>
           </Card>
         </div>
       </Section>
@@ -80,7 +80,7 @@ export default async function AboutPage() {
               alt="President"
               className="h-56 w-full rounded-xl border border-slate-200 object-cover md:h-[220px]"
             />
-            <p className="text-slate-700">{about.presidentsMessage}</p>
+            <p className="whitespace-pre-line text-slate-700">{about.presidentsMessage}</p>
           </div>
         </Card>
       </Section>

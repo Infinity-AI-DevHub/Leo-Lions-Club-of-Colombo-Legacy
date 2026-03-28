@@ -54,7 +54,7 @@ export default async function NoticesPage() {
                 {notice.noticeDate || 'Notice'}
               </p>
               <h3 className="mt-1 text-lg font-semibold text-slate-900">{notice.title}</h3>
-              <p className="mt-2 line-clamp-3 text-sm text-slate-700">{notice.summary || notice.content || 'Public notice'}</p>
+              <p className="mt-2 line-clamp-3 whitespace-pre-line text-sm text-slate-700">{notice.summary || notice.content || 'Public notice'}</p>
               {notice.externalLink ? (
                 <a
                   href={notice.externalLink}

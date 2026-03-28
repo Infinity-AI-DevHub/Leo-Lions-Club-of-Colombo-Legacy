@@ -55,7 +55,7 @@ export default async function MembershipPage() {
         <div className="mt-6">
           <Card>
             <h3 className="text-lg font-semibold text-sky-900">Eligibility</h3>
-            <p className="mt-2 text-slate-700">{membership.eligibility}</p>
+            <p className="mt-2 whitespace-pre-line text-slate-700">{membership.eligibility}</p>
             {membership.joinFormLink ? (
               <a
                 href={membership.joinFormLink}

@@ -57,7 +57,7 @@ export default async function PollsPage() {
                   Poll Closed
                 </span>
               ) : null}
-              <p className="mt-2 text-sm text-slate-700">{poll.description || 'Participate in this community poll.'}</p>
+              <p className="mt-2 whitespace-pre-line text-sm text-slate-700">{poll.description || 'Participate in this community poll.'}</p>
               {poll.options && poll.options.length > 0 ? (
                 <PublicPollVoting pollId={poll.id} options={poll.options} isClosed={poll.status === 'CLOSED'} />
               ) : null}

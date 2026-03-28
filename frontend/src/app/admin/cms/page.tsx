@@ -64,6 +64,12 @@ type FieldDef = {
   allowCropOption?: boolean;
 };
 
+function isParagraphField(fieldName: string) {
+  return /(description|message|summary|content|objective|outcome|intro|vision|mission|bio|eligibility)/i.test(
+    fieldName,
+  );
+}
+
 function getToken() {
   return localStorage.getItem('leo_admin_token') || '';
 }
@@ -587,7 +593,7 @@ function SingletonForm({
               <textarea
                 value={form[f.name] || ''}
                 onChange={(e) => setForm({ ...form, [f.name]: e.target.value })}
-                rows={3}
+                rows={isParagraphField(f.name) ? 8 : 4}
                 className="mt-1 w-full rounded-xl border border-slate-300 bg-white/85 px-3 py-2.5 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
               />
             ) : (
@@ -1325,7 +1331,7 @@ function CrudForm({
               <textarea
                 value={form[f.name] || ''}
                 onChange={(e) => setForm({ ...form, [f.name]: e.target.value })}
-                rows={f.name === 'socialLinks' ? 6 : 4}
+                rows={f.name === 'socialLinks' ? 6 : isParagraphField(f.name) ? 8 : 4}
                 className="mt-1 w-full rounded-xl border border-slate-300 bg-white/85 px-3 py-2.5 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
               />
             ) : f.type === 'select' ? (

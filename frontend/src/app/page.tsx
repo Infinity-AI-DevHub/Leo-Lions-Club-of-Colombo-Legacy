@@ -143,14 +143,14 @@ export default async function HomePage() {
               <Compass size={18} />
               Vision
             </h3>
-            <p className="mt-2 text-slate-600">{about.vision}</p>
+            <p className="mt-2 whitespace-pre-line text-slate-600">{about.vision}</p>
           </Card>
           <Card>
             <h3 className="flex items-center gap-2 text-lg font-semibold text-sky-900">
               <Goal size={18} />
               Mission
             </h3>
-            <p className="mt-2 text-slate-600">{about.mission}</p>
+            <p className="mt-2 whitespace-pre-line text-slate-600">{about.mission}</p>
           </Card>
         </div>
       </Section>
@@ -169,7 +169,7 @@ export default async function HomePage() {
                 {project.category}
               </p>
               <h3 className="mt-1 text-xl font-semibold">{project.title}</h3>
-              <p className="mt-2 text-sm text-slate-600">{project.description}</p>
+              <p className="mt-2 whitespace-pre-line text-sm text-slate-600">{project.description}</p>
               <Link
                 href="/projects"
                 data-engagement-event="project_open"
@@ -218,7 +218,7 @@ export default async function HomePage() {
                   {notice.noticeDate || 'Notice'}
                 </p>
                 <h3 className="mt-1 text-lg font-semibold">{notice.title}</h3>
-                <p className="mt-2 line-clamp-3 text-sm text-slate-600">{notice.summary || notice.content || 'Public notice'}</p>
+                <p className="mt-2 line-clamp-3 whitespace-pre-line text-sm text-slate-600">{notice.summary || notice.content || 'Public notice'}</p>
                 <Link href="/notices" className="mt-3 inline-block text-sm font-semibold text-sky-700 hover:text-sky-800">
                   View Notice →
                 </Link>
@@ -273,7 +273,7 @@ export default async function HomePage() {
                 {leader.fullName}
               </h3>
               <p className="text-sm text-sky-700">{leader.roleTitle}</p>
-              <p className="mt-2 text-sm text-slate-600">{leader.shortBio}</p>
+              <p className="mt-2 whitespace-pre-line text-sm text-slate-600">{leader.shortBio}</p>
             </Card>
           ))}
         </div>

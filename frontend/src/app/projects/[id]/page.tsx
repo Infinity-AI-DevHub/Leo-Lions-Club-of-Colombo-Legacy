@@ -114,18 +114,18 @@ export default async function ProjectDetailsPage({
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           <Card>
             <h3 className="text-lg font-semibold text-slate-900">Project Overview</h3>
-            <p className="mt-2 text-slate-700">{project.description}</p>
+            <p className="mt-2 whitespace-pre-line text-slate-700">{project.description}</p>
           </Card>
           <Card>
             <h3 className="text-lg font-semibold text-slate-900">Objectives</h3>
-            <p className="mt-2 text-slate-700">{project.objectives || 'No objectives added yet.'}</p>
+            <p className="mt-2 whitespace-pre-line text-slate-700">{project.objectives || 'No objectives added yet.'}</p>
           </Card>
         </div>
 
         <div className="mt-6">
           <Card>
             <h3 className="text-lg font-semibold text-slate-900">Outcomes / Impact</h3>
-            <p className="mt-2 text-slate-700">{project.outcomes || 'No outcomes added yet.'}</p>
+            <p className="mt-2 whitespace-pre-line text-slate-700">{project.outcomes || 'No outcomes added yet.'}</p>
           </Card>
         </div>
 
