@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { PublicShell } from '@/components/public-shell';
+import { RichTextContent } from '@/components/rich-text-content';
 import { Section } from '@/components/ui';
 import { getPublicContent } from '@/lib/public-api';
 import { toAssetUrl } from '@/lib/assets';
@@ -97,7 +98,9 @@ function ProfileCard({ member }: { member: LeadershipMember }) {
       />
       <h4 className="mt-4 text-lg font-semibold text-slate-900">{member.fullName}</h4>
       <p className="text-sm font-medium text-sky-700">{member.roleTitle}</p>
-      <p className="mt-2 max-h-20 overflow-hidden whitespace-pre-line text-sm text-slate-600">{member.shortBio}</p>
+      <div className="mt-2 max-h-20 overflow-hidden">
+        <RichTextContent text={member.shortBio} className="space-y-1" paragraphClassName="text-sm text-slate-600" />
+      </div>
       {member.socialLinks && member.socialLinks.length > 0 ? (
         <div className="mt-auto pt-4 flex flex-wrap gap-2">
           {member.socialLinks.map((link, index) => (

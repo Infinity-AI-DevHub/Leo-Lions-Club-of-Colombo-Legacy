@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PublicShell } from '@/components/public-shell';
 import { PublicInteractionPanel } from '@/components/public-interaction-panel';
+import { RichTextContent } from '@/components/rich-text-content';
 import { Section } from '@/components/ui';
 import { toAssetUrl } from '@/lib/assets';
 import { getPublicContent } from '@/lib/public-api';
@@ -65,7 +66,9 @@ export default async function ProjectsPage() {
                   <p className="text-xs font-semibold uppercase tracking-wide text-sky-700">{project.category}</p>
                   <h3 className="mt-1 text-lg font-semibold leading-snug">{project.title}</h3>
                   <p className="text-sm text-slate-500">{project.date}</p>
-                  <p className="mt-3 line-clamp-2 whitespace-pre-line text-sm text-slate-700">{project.description}</p>
+                  <div className="mt-3 line-clamp-2">
+                    <RichTextContent text={project.description} className="space-y-1" paragraphClassName="text-sm text-slate-700" />
+                  </div>
                   <p className="mt-3 text-sm font-semibold text-sky-700">View Full Details →</p>
                 </div>
               </Link>

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { PublicInteractionPanel } from '@/components/public-interaction-panel';
+import { RichTextContent } from '@/components/rich-text-content';
 import { PublicShell } from '@/components/public-shell';
 import { Card, Section } from '@/components/ui';
 import { toAssetUrl } from '@/lib/assets';
@@ -149,7 +150,11 @@ export default async function EventDetailsPage({
         <div className="mt-6">
           <Card>
             <h3 className="text-lg font-semibold text-slate-900">Full Event Description</h3>
-            <p className="mt-2 whitespace-pre-line text-slate-700">{event.detailedDescription || event.description}</p>
+            <RichTextContent
+              text={event.detailedDescription || event.description}
+              className="mt-2 space-y-2"
+              paragraphClassName="text-slate-700"
+            />
           </Card>
         </div>
 

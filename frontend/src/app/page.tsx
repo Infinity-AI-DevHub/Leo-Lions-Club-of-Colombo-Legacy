@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { CountUp } from '@/components/motion/count-up';
 import { PublicShell } from '@/components/public-shell';
 import { JoinMotivationInline } from '@/components/join-motivation-widget';
+import { RichTextContent } from '@/components/rich-text-content';
 import { Card, Section } from '@/components/ui';
 import { toAssetUrl } from '@/lib/assets';
 import { getPublicContent } from '@/lib/public-api';
@@ -143,14 +144,14 @@ export default async function HomePage() {
               <Compass size={18} />
               Vision
             </h3>
-            <p className="mt-2 whitespace-pre-line text-slate-600">{about.vision}</p>
+            <RichTextContent text={about.vision} className="mt-2 space-y-1" paragraphClassName="text-slate-600" />
           </Card>
           <Card>
             <h3 className="flex items-center gap-2 text-lg font-semibold text-sky-900">
               <Goal size={18} />
               Mission
             </h3>
-            <p className="mt-2 whitespace-pre-line text-slate-600">{about.mission}</p>
+            <RichTextContent text={about.mission} className="mt-2 space-y-1" paragraphClassName="text-slate-600" />
           </Card>
         </div>
       </Section>
@@ -169,7 +170,7 @@ export default async function HomePage() {
                 {project.category}
               </p>
               <h3 className="mt-1 text-xl font-semibold">{project.title}</h3>
-              <p className="mt-2 whitespace-pre-line text-sm text-slate-600">{project.description}</p>
+              <RichTextContent text={project.description} className="mt-2 space-y-1" paragraphClassName="text-sm text-slate-600" />
               <Link
                 href="/projects"
                 data-engagement-event="project_open"
@@ -218,7 +219,13 @@ export default async function HomePage() {
                   {notice.noticeDate || 'Notice'}
                 </p>
                 <h3 className="mt-1 text-lg font-semibold">{notice.title}</h3>
-                <p className="mt-2 line-clamp-3 whitespace-pre-line text-sm text-slate-600">{notice.summary || notice.content || 'Public notice'}</p>
+                <div className="mt-2 line-clamp-3">
+                  <RichTextContent
+                    text={notice.summary || notice.content || 'Public notice'}
+                    className="space-y-1"
+                    paragraphClassName="text-sm text-slate-600"
+                  />
+                </div>
                 <Link href="/notices" className="mt-3 inline-block text-sm font-semibold text-sky-700 hover:text-sky-800">
                   View Notice →
                 </Link>
@@ -273,7 +280,7 @@ export default async function HomePage() {
                 {leader.fullName}
               </h3>
               <p className="text-sm text-sky-700">{leader.roleTitle}</p>
-              <p className="mt-2 whitespace-pre-line text-sm text-slate-600">{leader.shortBio}</p>
+              <RichTextContent text={leader.shortBio} className="mt-2 space-y-1" paragraphClassName="text-sm text-slate-600" />
             </Card>
           ))}
         </div>

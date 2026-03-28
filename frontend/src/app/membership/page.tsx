@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { PublicShell } from '@/components/public-shell';
 import { JoinMotivationInline } from '@/components/join-motivation-widget';
+import { RichTextContent } from '@/components/rich-text-content';
 import { Card, Section } from '@/components/ui';
 import { getPublicContent } from '@/lib/public-api';
 import { SITE_NAME, SITE_URL, buildPageMetadata } from '@/lib/seo';
@@ -55,7 +56,11 @@ export default async function MembershipPage() {
         <div className="mt-6">
           <Card>
             <h3 className="text-lg font-semibold text-sky-900">Eligibility</h3>
-            <p className="mt-2 whitespace-pre-line text-slate-700">{membership.eligibility}</p>
+            <RichTextContent
+              text={membership.eligibility}
+              className="mt-2 space-y-2"
+              paragraphClassName="text-slate-700"
+            />
             {membership.joinFormLink ? (
               <a
                 href={membership.joinFormLink}

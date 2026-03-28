@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { PublicInteractionPanel } from '@/components/public-interaction-panel';
 import { PublicPollVoting } from '@/components/public-poll-voting';
+import { RichTextContent } from '@/components/rich-text-content';
 import { PublicShell } from '@/components/public-shell';
 import { Section } from '@/components/ui';
 import { toAssetUrl } from '@/lib/assets';
@@ -57,7 +58,11 @@ export default async function PollsPage() {
                   Poll Closed
                 </span>
               ) : null}
-              <p className="mt-2 whitespace-pre-line text-sm text-slate-700">{poll.description || 'Participate in this community poll.'}</p>
+              <RichTextContent
+                text={poll.description || 'Participate in this community poll.'}
+                className="mt-2 space-y-1"
+                paragraphClassName="text-sm text-slate-700"
+              />
               {poll.options && poll.options.length > 0 ? (
                 <PublicPollVoting pollId={poll.id} options={poll.options} isClosed={poll.status === 'CLOSED'} />
               ) : null}

@@ -6,6 +6,7 @@ import { AdminShell } from '@/components/admin-shell';
 import { adminClient } from '@/lib/admin-api';
 import { API_BASE_URL } from '@/lib/config';
 import { toAssetUrl } from '@/lib/assets';
+import { RichTextEditor } from '@/components/rich-text-editor';
 import {
   BellRing,
   Blocks,
@@ -68,6 +69,14 @@ function isParagraphField(fieldName: string) {
   return /(description|message|summary|content|objective|outcome|intro|vision|mission|bio|eligibility)/i.test(
     fieldName,
   );
+}
+
+function isStructuredTextareaField(fieldName: string) {
+  return ['socialLinks', 'options', 'googleMapsEmbed', 'defaultSeoDescription'].includes(fieldName);
+}
+
+function shouldUseRichTextEditor(fieldName: string) {
+  return isParagraphField(fieldName) && !isStructuredTextareaField(fieldName);
 }
 
 function getToken() {
@@ -590,12 +599,21 @@ function SingletonForm({
                 </p>
               </div>
             ) : f.type === 'textarea' ? (
-              <textarea
-                value={form[f.name] || ''}
-                onChange={(e) => setForm({ ...form, [f.name]: e.target.value })}
-                rows={isParagraphField(f.name) ? 8 : 4}
-                className="mt-1 w-full rounded-xl border border-slate-300 bg-white/85 px-3 py-2.5 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
-              />
+              shouldUseRichTextEditor(f.name) ? (
+                <RichTextEditor
+                  value={form[f.name] || ''}
+                  onChange={(value) => setForm({ ...form, [f.name]: value })}
+                  rows={8}
+                  className="mt-1 w-full rounded-xl border border-slate-300 bg-white/85 px-3 py-2.5 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                />
+              ) : (
+                <textarea
+                  value={form[f.name] || ''}
+                  onChange={(e) => setForm({ ...form, [f.name]: e.target.value })}
+                  rows={isParagraphField(f.name) ? 8 : 4}
+                  className="mt-1 w-full rounded-xl border border-slate-300 bg-white/85 px-3 py-2.5 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                />
+              )
             ) : (
               <input
                 value={form[f.name] || ''}
@@ -1328,12 +1346,21 @@ function CrudForm({
                 ) : null}
               </div>
             ) : f.type === 'textarea' ? (
-              <textarea
-                value={form[f.name] || ''}
-                onChange={(e) => setForm({ ...form, [f.name]: e.target.value })}
-                rows={f.name === 'socialLinks' ? 6 : isParagraphField(f.name) ? 8 : 4}
-                className="mt-1 w-full rounded-xl border border-slate-300 bg-white/85 px-3 py-2.5 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
-              />
+              shouldUseRichTextEditor(f.name) ? (
+                <RichTextEditor
+                  value={form[f.name] || ''}
+                  onChange={(value) => setForm({ ...form, [f.name]: value })}
+                  rows={8}
+                  className="mt-1 w-full rounded-xl border border-slate-300 bg-white/85 px-3 py-2.5 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                />
+              ) : (
+                <textarea
+                  value={form[f.name] || ''}
+                  onChange={(e) => setForm({ ...form, [f.name]: e.target.value })}
+                  rows={f.name === 'socialLinks' ? 6 : isParagraphField(f.name) ? 8 : 4}
+                  className="mt-1 w-full rounded-xl border border-slate-300 bg-white/85 px-3 py-2.5 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                />
+              )
             ) : f.type === 'select' ? (
               <select
                 value={form[f.name] || ''}

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { PublicInteractionPanel } from '@/components/public-interaction-panel';
+import { RichTextContent } from '@/components/rich-text-content';
 import { PublicShell } from '@/components/public-shell';
 import { Section } from '@/components/ui';
 import { toAssetUrl } from '@/lib/assets';
@@ -54,7 +55,13 @@ export default async function NoticesPage() {
                 {notice.noticeDate || 'Notice'}
               </p>
               <h3 className="mt-1 text-lg font-semibold text-slate-900">{notice.title}</h3>
-              <p className="mt-2 line-clamp-3 whitespace-pre-line text-sm text-slate-700">{notice.summary || notice.content || 'Public notice'}</p>
+              <div className="mt-2 line-clamp-3">
+                <RichTextContent
+                  text={notice.summary || notice.content || 'Public notice'}
+                  className="space-y-1"
+                  paragraphClassName="text-sm text-slate-700"
+                />
+              </div>
               {notice.externalLink ? (
                 <a
                   href={notice.externalLink}

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { PublicShell } from '@/components/public-shell';
+import { RichTextContent } from '@/components/rich-text-content';
 import { Card, Section } from '@/components/ui';
 import { getPublicContent } from '@/lib/public-api';
 import { toAssetUrl } from '@/lib/assets';
@@ -53,11 +54,11 @@ export default async function AboutPage() {
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <h3 className="text-lg font-semibold text-sky-900">Vision</h3>
-            <p className="mt-2 whitespace-pre-line text-slate-600">{about.vision}</p>
+            <RichTextContent text={about.vision} className="mt-2 space-y-2" paragraphClassName="text-slate-600" />
           </Card>
           <Card>
             <h3 className="text-lg font-semibold text-sky-900">Mission</h3>
-            <p className="mt-2 whitespace-pre-line text-slate-600">{about.mission}</p>
+            <RichTextContent text={about.mission} className="mt-2 space-y-2" paragraphClassName="text-slate-600" />
           </Card>
         </div>
       </Section>
@@ -80,7 +81,7 @@ export default async function AboutPage() {
               alt="President"
               className="h-56 w-full rounded-xl border border-slate-200 object-cover md:h-[220px]"
             />
-            <p className="whitespace-pre-line text-slate-700">{about.presidentsMessage}</p>
+            <RichTextContent text={about.presidentsMessage} className="space-y-2" paragraphClassName="text-slate-700" />
           </div>
         </Card>
       </Section>
