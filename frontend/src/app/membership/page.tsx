@@ -1,14 +1,35 @@
+import type { Metadata } from 'next';
 import { PublicShell } from '@/components/public-shell';
 import { JoinMotivationInline } from '@/components/join-motivation-widget';
 import { Card, Section } from '@/components/ui';
 import { getPublicContent } from '@/lib/public-api';
+import { SITE_NAME, SITE_URL, buildPageMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Membership',
+  description:
+    'Join Leo Lions Club of Colombo Legacy and discover membership benefits, eligibility, and application details.',
+  path: '/membership',
+});
 
 export default async function MembershipPage() {
   const content = await getPublicContent();
   const { siteSettings, membership } = content;
+  const membershipSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Membership / Join Us',
+    url: `${SITE_URL}/membership`,
+    about: SITE_NAME,
+    description: membership.introText,
+  };
 
   return (
     <PublicShell organizationName={siteSettings.organizationName} socialLinks={content.socialLinks} contact={content.contact} footerBuilderName={siteSettings.footerBuilderName} footerBuilderUrl={siteSettings.footerBuilderUrl}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(membershipSchema) }}
+      />
       <Section title="Membership / Join Us" subtitle={membership.introText}>
         <div className="mb-6">
           <JoinMotivationInline compact />

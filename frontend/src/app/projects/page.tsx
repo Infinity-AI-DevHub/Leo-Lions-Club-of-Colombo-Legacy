@@ -1,16 +1,51 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PublicShell } from '@/components/public-shell';
 import { PublicInteractionPanel } from '@/components/public-interaction-panel';
 import { Section } from '@/components/ui';
 import { toAssetUrl } from '@/lib/assets';
 import { getPublicContent } from '@/lib/public-api';
+import { SITE_NAME, SITE_URL, absoluteUrl, buildPageMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Projects',
+  description:
+    'Explore community service projects and measurable social impact initiatives by Leo Lions Club of Colombo Legacy.',
+  path: '/projects',
+});
 
 export default async function ProjectsPage() {
   const content = await getPublicContent();
   const { siteSettings, projects } = content;
+  const projectsSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Projects',
+    url: `${SITE_URL}/projects`,
+    about: SITE_NAME,
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: projects.length,
+      itemListElement: projects.map((project, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'Article',
+          headline: project.title,
+          description: project.description,
+          image: absoluteUrl(toAssetUrl(project.coverImage) || '/default-project.png'),
+          url: `${SITE_URL}/projects/${project.id}`,
+        },
+      })),
+    },
+  };
 
   return (
     <PublicShell organizationName={siteSettings.organizationName} socialLinks={content.socialLinks} contact={content.contact} footerBuilderName={siteSettings.footerBuilderName} footerBuilderUrl={siteSettings.footerBuilderUrl}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(projectsSchema) }}
+      />
       <Section title="Projects & Service" subtitle="Our service portfolio reflects innovation, compassion, and measurable impact.">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (

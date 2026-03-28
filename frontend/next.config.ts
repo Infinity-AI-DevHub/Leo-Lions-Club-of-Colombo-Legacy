@@ -15,6 +15,11 @@ const nextConfig: NextConfig = {
         port: "4000",
         pathname: "/uploads/**",
       },
+      {
+        protocol: "https",
+        hostname: "api.colombolegacy.org",
+        pathname: "/uploads/**",
+      },
     ],
   },
 };

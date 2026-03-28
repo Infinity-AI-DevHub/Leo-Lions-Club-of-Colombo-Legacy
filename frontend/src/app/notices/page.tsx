@@ -1,16 +1,46 @@
+import type { Metadata } from 'next';
 import { PublicInteractionPanel } from '@/components/public-interaction-panel';
 import { PublicShell } from '@/components/public-shell';
 import { Section } from '@/components/ui';
 import { toAssetUrl } from '@/lib/assets';
 import { getPublicContent } from '@/lib/public-api';
+import { SITE_NAME, SITE_URL, buildPageMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Public Notices',
+  description:
+    'Stay informed with official notices and announcements from Leo Lions Club of Colombo Legacy.',
+  path: '/notices',
+});
 
 export default async function NoticesPage() {
   const content = await getPublicContent();
   const { siteSettings, notices } = content;
   const publishedNotices = notices.filter((item) => item.status === 'PUBLISHED');
+  const noticesSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Public Notices',
+    url: `${SITE_URL}/notices`,
+    about: SITE_NAME,
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: publishedNotices.length,
+      itemListElement: publishedNotices.map((notice, index) => ({
+        '@type': 'Article',
+        position: index + 1,
+        headline: notice.title,
+        datePublished: notice.noticeDate || undefined,
+      })),
+    },
+  };
 
   return (
     <PublicShell organizationName={siteSettings.organizationName} socialLinks={content.socialLinks} contact={content.contact} footerBuilderName={siteSettings.footerBuilderName} footerBuilderUrl={siteSettings.footerBuilderUrl}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(noticesSchema) }}
+      />
       <Section title="Public Notices" subtitle="Stay updated and share important club announcements.">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {publishedNotices.map((notice) => (

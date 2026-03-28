@@ -1,8 +1,17 @@
+import type { Metadata } from 'next';
 import { PublicShell } from '@/components/public-shell';
 import { Section } from '@/components/ui';
 import { getPublicContent } from '@/lib/public-api';
 import { toAssetUrl } from '@/lib/assets';
+import { SITE_NAME, SITE_URL, absoluteUrl, buildPageMetadata } from '@/lib/seo';
 import Link from 'next/link';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Leadership',
+  description:
+    'Meet the Executive Committee and Board Members of Leo Lions Club of Colombo Legacy.',
+  path: '/leadership',
+});
 
 type LeadershipMember = {
   id: number;
@@ -25,9 +34,34 @@ export default async function LeadershipPage() {
   const { siteSettings, leadership } = content;
   const executiveCommittee = leadership.filter((member) => resolveCommittee(member) === 'EXECUTIVE_COMMITTEE');
   const boardMembers = leadership.filter((member) => resolveCommittee(member) === 'BOARD_MEMBER');
+  const leadershipSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Leadership',
+    url: `${SITE_URL}/leadership`,
+    about: SITE_NAME,
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: leadership.length,
+      itemListElement: leadership.map((member, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'Person',
+          name: member.fullName,
+          jobTitle: member.roleTitle,
+          image: absoluteUrl(toAssetUrl(member.photoUrl) || '/default-profile.webp'),
+        },
+      })),
+    },
+  };
 
   return (
     <PublicShell organizationName={siteSettings.organizationName} socialLinks={content.socialLinks} contact={content.contact} footerBuilderName={siteSettings.footerBuilderName} footerBuilderUrl={siteSettings.footerBuilderUrl}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(leadershipSchema) }}
+      />
       <Section title="Leadership" subtitle="Meet the young leaders driving purpose, service, and impact.">
         <div className="space-y-10">
           <div>

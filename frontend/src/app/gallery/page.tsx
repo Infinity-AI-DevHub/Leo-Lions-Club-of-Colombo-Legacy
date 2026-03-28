@@ -1,15 +1,48 @@
+import type { Metadata } from 'next';
 import { PublicInteractionPanel } from '@/components/public-interaction-panel';
 import { PublicShell } from '@/components/public-shell';
 import { Card, Section } from '@/components/ui';
 import { toAssetUrl } from '@/lib/assets';
 import { getPublicContent } from '@/lib/public-api';
+import { SITE_NAME, SITE_URL, absoluteUrl, buildPageMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Gallery',
+  description:
+    'Browse the Leo Lions Club of Colombo Legacy gallery featuring project and event highlights.',
+  path: '/gallery',
+});
 
 export default async function GalleryPage() {
   const content = await getPublicContent();
   const { siteSettings, galleryAlbums } = content;
+  const gallerySchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Gallery',
+    url: `${SITE_URL}/gallery`,
+    about: SITE_NAME,
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: galleryAlbums.length,
+      itemListElement: galleryAlbums.map((album, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'ImageGallery',
+          name: album.title,
+          image: (album.images || []).map((image) => absoluteUrl(toAssetUrl(image.imageUrl) || '/logo.png')),
+        },
+      })),
+    },
+  };
 
   return (
     <PublicShell organizationName={siteSettings.organizationName} socialLinks={content.socialLinks} contact={content.contact} footerBuilderName={siteSettings.footerBuilderName} footerBuilderUrl={siteSettings.footerBuilderUrl}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(gallerySchema) }}
+      />
       <Section title="Gallery" subtitle="Moments of service, leadership, and community transformation.">
         <div className="space-y-8">
           {galleryAlbums.map((album) => (

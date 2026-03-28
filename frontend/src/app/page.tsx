@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CountUp } from '@/components/motion/count-up';
 import { PublicShell } from '@/components/public-shell';
@@ -6,6 +7,20 @@ import { Card, Section } from '@/components/ui';
 import { toAssetUrl } from '@/lib/assets';
 import { getPublicContent } from '@/lib/public-api';
 import { CalendarDays, Compass, Goal, Images, Lightbulb, ShieldCheck, Sparkles, Users } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Home',
+  description:
+    'Discover Leo Lions Club of Colombo Legacy: youth leadership, social impact projects, events, galleries, and opportunities to join.',
+  alternates: { canonical: 'https://colombolegacy.org/' },
+  openGraph: {
+    title: 'Leo Lions Club of Colombo Legacy',
+    description:
+      'Youth-led leadership and service movement creating sustainable community impact in Colombo.',
+    url: 'https://colombolegacy.org/',
+    images: ['/logo.png'],
+  },
+};
 
 function resolveEventImage(value: unknown) {
   if (typeof value === 'string') return toAssetUrl(value);
@@ -21,9 +36,31 @@ export default async function HomePage() {
   const leaders = leadership.slice(0, 3);
   const galleryPreview = galleryAlbums.flatMap((album) => album.images).slice(0, 6);
   const publishedNotices = notices.filter((item) => item.status === 'PUBLISHED').slice(0, 3);
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: siteSettings.organizationName,
+    url: 'https://colombolegacy.org',
+    logo: 'https://colombolegacy.org/logo.png',
+    sameAs: content.socialLinks.map((item) => item.url).filter(Boolean),
+  };
+  const webSiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: siteSettings.organizationName,
+    url: 'https://colombolegacy.org',
+  };
 
   return (
     <PublicShell organizationName={siteSettings.organizationName} socialLinks={content.socialLinks} contact={content.contact} footerBuilderName={siteSettings.footerBuilderName} footerBuilderUrl={siteSettings.footerBuilderUrl}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
+      />
       <section
         className="hero-glow relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-sky-900 text-white"
         style={{

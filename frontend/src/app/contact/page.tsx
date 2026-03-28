@@ -1,15 +1,42 @@
+import type { Metadata } from 'next';
 import { PublicShell } from '@/components/public-shell';
 import { Card, Section } from '@/components/ui';
 import { getPublicContent } from '@/lib/public-api';
 import { ContactForm } from '@/components/contact-form';
+import { SITE_NAME, SITE_URL, buildPageMetadata } from '@/lib/seo';
 import { Mail, MapPin, Phone, Clock3 } from 'lucide-react';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Contact',
+  description:
+    'Contact Leo Lions Club of Colombo Legacy for partnerships, volunteering, sponsorships, media inquiries, and community collaborations.',
+  path: '/contact',
+});
 
 export default async function ContactPage() {
   const content = await getPublicContent();
   const { siteSettings, contact } = content;
+  const contactSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: `Contact ${SITE_NAME}`,
+    url: `${SITE_URL}/contact`,
+    about: SITE_NAME,
+    mainEntity: {
+      '@type': 'Organization',
+      name: siteSettings.organizationName,
+      email: contact.email,
+      telephone: contact.phone,
+      address: contact.address,
+    },
+  };
 
   return (
     <PublicShell organizationName={siteSettings.organizationName} socialLinks={content.socialLinks} contact={content.contact} footerBuilderName={siteSettings.footerBuilderName} footerBuilderUrl={siteSettings.footerBuilderUrl}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactSchema) }}
+      />
       <Section title="Contact Us" subtitle="Reach out for partnerships, volunteering, sponsorships, and media inquiries.">
         <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="space-y-4">

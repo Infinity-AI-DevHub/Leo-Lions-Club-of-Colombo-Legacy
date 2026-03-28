@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { PublicInteractionPanel } from '@/components/public-interaction-panel';
@@ -5,6 +6,41 @@ import { PublicShell } from '@/components/public-shell';
 import { Card, Section } from '@/components/ui';
 import { toAssetUrl } from '@/lib/assets';
 import { getPublicContent } from '@/lib/public-api';
+import { SITE_NAME, SITE_URL, absoluteUrl } from '@/lib/seo';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const content = await getPublicContent();
+  const project = content.projects.find((item) => String(item.id) === id);
+  if (!project) {
+    return {
+      title: 'Project Not Found',
+      robots: { index: false, follow: false },
+    };
+  }
+  return {
+    title: `${project.title} | Project`,
+    description: project.description || `Project by ${content.siteSettings.organizationName}`,
+    alternates: { canonical: `https://colombolegacy.org/projects/${project.id}` },
+    openGraph: {
+      title: project.title,
+      description: project.description || '',
+      url: `https://colombolegacy.org/projects/${project.id}`,
+      images: [absoluteUrl(toAssetUrl(project.coverImage) || '/default-project.png')],
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${project.title} | ${SITE_NAME}`,
+      description: project.description || '',
+      images: [absoluteUrl(toAssetUrl(project.coverImage) || '/default-project.png')],
+    },
+  };
+}
 
 export default async function ProjectDetailsPage({
   params,
@@ -21,9 +57,47 @@ export default async function ProjectDetailsPage({
   }
 
   const galleryImages = project.galleryImages || [];
+  const projectSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: project.title,
+    description: project.description,
+    datePublished: project.date || undefined,
+    image: [absoluteUrl(toAssetUrl(project.coverImage) || '/default-project.png')],
+    mainEntityOfPage: `${SITE_URL}/projects/${project.id}`,
+    author: {
+      '@type': 'Organization',
+      name: siteSettings.organizationName,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: siteSettings.organizationName,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${SITE_URL}/logo.png`,
+      },
+    },
+  };
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Projects', item: `${SITE_URL}/projects` },
+      { '@type': 'ListItem', position: 3, name: project.title, item: `${SITE_URL}/projects/${project.id}` },
+    ],
+  };
 
   return (
     <PublicShell organizationName={siteSettings.organizationName} socialLinks={content.socialLinks} contact={content.contact} footerBuilderName={siteSettings.footerBuilderName} footerBuilderUrl={siteSettings.footerBuilderUrl}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(projectSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <Section title={project.title} subtitle={`${project.category} • ${project.date || 'Date TBA'}`}>
         <Link href="/projects" className="text-sm font-semibold text-sky-700 hover:text-sky-800">
           ← Back to Projects

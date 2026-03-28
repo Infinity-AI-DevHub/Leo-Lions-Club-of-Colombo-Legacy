@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { PublicInteractionPanel } from '@/components/public-interaction-panel';
@@ -5,11 +6,46 @@ import { PublicShell } from '@/components/public-shell';
 import { Card, Section } from '@/components/ui';
 import { toAssetUrl } from '@/lib/assets';
 import { getPublicContent } from '@/lib/public-api';
+import { SITE_NAME, SITE_URL, absoluteUrl } from '@/lib/seo';
 
 function resolveEventImage(value: unknown) {
   if (typeof value === 'string') return toAssetUrl(value);
   if (value && typeof value === 'object') return toAssetUrl(String((value as { imageUrl?: string }).imageUrl || ''));
   return '';
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const content = await getPublicContent();
+  const event = content.events.find((item) => String(item.id) === id);
+  if (!event) {
+    return {
+      title: 'Event Not Found',
+      robots: { index: false, follow: false },
+    };
+  }
+  return {
+    title: `${event.title} | Event`,
+    description: event.description || `Event by ${content.siteSettings.organizationName}`,
+    alternates: { canonical: `https://colombolegacy.org/events/${event.id}` },
+    openGraph: {
+      title: event.title,
+      description: event.description || '',
+      url: `https://colombolegacy.org/events/${event.id}`,
+      images: [absoluteUrl(resolveEventImage(event.posterUrl) || '/logo.png')],
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${event.title} | ${SITE_NAME}`,
+      description: event.description || '',
+      images: [absoluteUrl(resolveEventImage(event.posterUrl) || '/logo.png')],
+    },
+  };
 }
 
 export default async function EventDetailsPage({
@@ -31,9 +67,47 @@ export default async function EventDetailsPage({
     .filter(Boolean);
   const startDate = event.eventDateTime ? new Date(event.eventDateTime) : null;
   const endDate = event.endDateTime ? new Date(event.endDateTime) : null;
+  const eventSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.title,
+    startDate: event.eventDateTime || undefined,
+    endDate: event.endDateTime || undefined,
+    eventStatus: event.eventStatus || undefined,
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    location: {
+      '@type': 'Place',
+      name: event.venue || 'Location TBA',
+      address: event.venue || 'Location TBA',
+    },
+    image: [absoluteUrl(resolveEventImage(event.posterUrl) || '/logo.png')],
+    description: event.detailedDescription || event.description,
+    organizer: {
+      '@type': 'Organization',
+      name: event.organizer || siteSettings.organizationName,
+      url: SITE_URL,
+    },
+  };
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Events', item: `${SITE_URL}/events` },
+      { '@type': 'ListItem', position: 3, name: event.title, item: `${SITE_URL}/events/${event.id}` },
+    ],
+  };
 
   return (
     <PublicShell organizationName={siteSettings.organizationName} socialLinks={content.socialLinks} contact={content.contact} footerBuilderName={siteSettings.footerBuilderName} footerBuilderUrl={siteSettings.footerBuilderUrl}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <Section title={event.title} subtitle={event.description || 'Event details'}>
         <Link href="/events" className="text-sm font-semibold text-sky-700 hover:text-sky-800">
           ← Back to Events

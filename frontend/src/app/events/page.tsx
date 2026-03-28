@@ -1,9 +1,18 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PublicInteractionPanel } from '@/components/public-interaction-panel';
 import { PublicShell } from '@/components/public-shell';
 import { Section } from '@/components/ui';
 import { toAssetUrl } from '@/lib/assets';
 import { getPublicContent } from '@/lib/public-api';
+import { SITE_NAME, SITE_URL, absoluteUrl, buildPageMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Events',
+  description:
+    'Browse upcoming and past events, forums, and campaigns organized by Leo Lions Club of Colombo Legacy.',
+  path: '/events',
+});
 
 function resolveEventImage(value: unknown) {
   if (typeof value === 'string') return toAssetUrl(value);
@@ -14,9 +23,39 @@ function resolveEventImage(value: unknown) {
 export default async function EventsPage() {
   const content = await getPublicContent();
   const { siteSettings, events } = content;
+  const eventsSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Events',
+    url: `${SITE_URL}/events`,
+    about: SITE_NAME,
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: events.length,
+      itemListElement: events.map((event, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'Event',
+          name: event.title,
+          startDate: event.eventDateTime || undefined,
+          location: {
+            '@type': 'Place',
+            name: event.venue || 'Location TBA',
+          },
+          image: absoluteUrl(resolveEventImage(event.posterUrl) || '/logo.png'),
+          url: `${SITE_URL}/events/${event.id}`,
+        },
+      })),
+    },
+  };
 
   return (
     <PublicShell organizationName={siteSettings.organizationName} socialLinks={content.socialLinks} contact={content.contact} footerBuilderName={siteSettings.footerBuilderName} footerBuilderUrl={siteSettings.footerBuilderUrl}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventsSchema) }}
+      />
       <Section title="Events" subtitle="Leadership workshops, service campaigns, and collaborative forums.">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (

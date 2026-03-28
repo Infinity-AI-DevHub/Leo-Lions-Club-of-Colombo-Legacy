@@ -1,17 +1,47 @@
+import type { Metadata } from 'next';
 import { PublicInteractionPanel } from '@/components/public-interaction-panel';
 import { PublicPollVoting } from '@/components/public-poll-voting';
 import { PublicShell } from '@/components/public-shell';
 import { Section } from '@/components/ui';
 import { toAssetUrl } from '@/lib/assets';
 import { getPublicContent } from '@/lib/public-api';
+import { SITE_NAME, SITE_URL, buildPageMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Public Polls',
+  description:
+    'Participate in official public polls published by Leo Lions Club of Colombo Legacy and share your perspective with the community.',
+  path: '/polls',
+});
 
 export default async function PollsPage() {
   const content = await getPublicContent();
   const { siteSettings, polls } = content;
   const publishedPolls = polls.filter((item) => item.status === 'PUBLISHED' || item.status === 'CLOSED');
+  const pollsSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Public Polls',
+    url: `${SITE_URL}/polls`,
+    about: SITE_NAME,
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: publishedPolls.length,
+      itemListElement: publishedPolls.map((poll, index) => ({
+        '@type': 'Question',
+        position: index + 1,
+        name: poll.title,
+        text: poll.description || poll.title,
+      })),
+    },
+  };
 
   return (
     <PublicShell organizationName={siteSettings.organizationName} socialLinks={content.socialLinks} contact={content.contact} footerBuilderName={siteSettings.footerBuilderName} footerBuilderUrl={siteSettings.footerBuilderUrl}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pollsSchema) }}
+      />
       <Section title="Public Polls" subtitle="Voice your opinion and share club polls with your network.">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {publishedPolls.map((poll) => (

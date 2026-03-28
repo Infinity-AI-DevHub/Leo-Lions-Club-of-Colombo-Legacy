@@ -1,15 +1,35 @@
+import type { Metadata } from 'next';
 import { PublicShell } from '@/components/public-shell';
 import { Card, Section } from '@/components/ui';
 import { getPublicContent } from '@/lib/public-api';
 import { toAssetUrl } from '@/lib/assets';
+import { SITE_NAME, SITE_URL, buildPageMetadata } from '@/lib/seo';
 import Image from 'next/image';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'About Us',
+  description:
+    'Learn about Leo Lions Club of Colombo Legacy, our vision, mission, values, and president’s message.',
+  path: '/about',
+});
 
 export default async function AboutPage() {
   const content = await getPublicContent();
   const { siteSettings, about } = content;
+  const aboutSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: `About ${SITE_NAME}`,
+    url: `${SITE_URL}/about`,
+    description: about.introduction,
+  };
 
   return (
     <PublicShell organizationName={siteSettings.organizationName} socialLinks={content.socialLinks} contact={content.contact} footerBuilderName={siteSettings.footerBuilderName} footerBuilderUrl={siteSettings.footerBuilderUrl}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutSchema) }}
+      />
       <Section title="About Us" subtitle={about.introduction}>
         {toAssetUrl(about.bannerImage) ? (
           <div className="mb-6 overflow-hidden rounded-2xl border border-slate-200 bg-white/80">
