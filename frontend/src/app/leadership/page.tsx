@@ -67,7 +67,7 @@ export default async function LeadershipPage() {
         <div className="space-y-10">
           <div>
             <h3 className="text-xl font-semibold text-slate-900">Executive Committee</h3>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {executiveCommittee.map((member) => (
                 <ProfileCard key={member.id} member={member} />
               ))}
@@ -76,7 +76,7 @@ export default async function LeadershipPage() {
 
           <div>
             <h3 className="text-xl font-semibold text-slate-900">Board Members</h3>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {boardMembers.map((member) => (
                 <ProfileCard key={member.id} member={member} />
               ))}
@@ -90,13 +90,13 @@ export default async function LeadershipPage() {
 
 function ProfileCard({ member }: { member: LeadershipMember }) {
   return (
-    <article className="card-hover glass-panel flex h-full min-h-[520px] flex-col rounded-2xl p-5">
+    <article className="card-hover glass-panel flex h-full min-h-[460px] flex-col rounded-2xl p-4">
       <img
         src={toAssetUrl(member.photoUrl) || '/default-profile.webp'}
         alt={`${member.fullName} profile`}
         className="aspect-square w-full rounded-xl border border-slate-200 object-cover"
       />
-      <h4 className="mt-4 text-lg font-semibold text-slate-900">{member.fullName}</h4>
+      <h4 className="mt-3 text-base font-semibold text-slate-900">{member.fullName}</h4>
       <p className="text-sm font-medium text-sky-700">{member.roleTitle}</p>
       <div className="mt-2 max-h-20 overflow-hidden">
         <RichTextContent text={member.shortBio} className="space-y-1" paragraphClassName="text-sm text-slate-600" />
