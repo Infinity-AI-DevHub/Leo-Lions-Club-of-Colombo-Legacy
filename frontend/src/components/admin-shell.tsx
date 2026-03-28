@@ -4,8 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import clsx from 'clsx';
-import { ReactNode } from 'react';
-import { BookOpenText, ChartColumnIncreasing, LayoutDashboard, LogOut, MenuSquare, ShieldCheck, Inbox, MessageSquare, Vote } from 'lucide-react';
+import { ReactNode, useEffect, useState } from 'react';
+import { BookOpenText, ChartColumnIncreasing, LayoutDashboard, LogOut, Menu, MenuSquare, ShieldCheck, X, Inbox, MessageSquare, Vote } from 'lucide-react';
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -20,6 +20,7 @@ const navItems = [
 export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pageTitle =
     pathname === '/admin/cms'
       ? 'Website Content'
@@ -35,8 +36,12 @@ export function AdminShell({ children }: { children: ReactNode }) {
         ? 'Engagement Analytics'
         : 'Dashboard Overview';
 
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-sky-100">
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-slate-100 via-blue-50 to-sky-100">
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-sky-100 bg-gradient-to-b from-slate-950 via-blue-950 to-sky-900 p-6 text-sky-50 lg:flex lg:flex-col">
         <div>
           <Image
@@ -83,6 +88,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
           onClick={() => {
             localStorage.removeItem('leo_admin_token');
             localStorage.removeItem('leo_admin_user');
+            setMobileMenuOpen(false);
             router.replace('/admin/login');
           }}
         >
@@ -96,7 +102,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
           <div className="flex items-center justify-between px-4 py-4 md:px-8">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">Admin Workspace</p>
-              <h2 className="mt-1 text-xl font-bold text-slate-900 md:text-2xl">{pageTitle}</h2>
+              <h2 className="mt-1 text-lg font-bold text-slate-900 sm:text-xl md:text-2xl">{pageTitle}</h2>
             </div>
             <div className="flex items-center gap-2">
               <div className="hidden items-center gap-2 rounded-xl border border-sky-100 bg-white px-3 py-2 text-xs text-slate-600 md:flex">
@@ -112,14 +118,18 @@ export function AdminShell({ children }: { children: ReactNode }) {
               </div>
               <button
                 type="button"
-                className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 lg:hidden"
-                onClick={() => router.push('/admin/cms')}
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 lg:hidden"
+                onClick={() => setMobileMenuOpen((prev) => !prev)}
+                aria-expanded={mobileMenuOpen}
+                aria-controls="admin-mobile-menu"
               >
+                {mobileMenuOpen ? <X size={16} /> : <Menu size={16} />}
                 Menu
               </button>
             </div>
           </div>
-          <div className="flex gap-2 border-t border-sky-100/70 px-4 py-2 lg:hidden">
+          <div className="overflow-x-auto border-t border-sky-100/70 px-4 py-2 lg:hidden">
+            <div className="flex min-w-max gap-2">
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -127,7 +137,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                   key={item.href}
                   href={item.href}
                   className={clsx(
-                    'flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold',
+                    'flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-semibold',
                     pathname === item.href ? 'bg-sky-100 text-sky-800' : 'text-slate-600',
                   )}
                 >
@@ -136,9 +146,66 @@ export function AdminShell({ children }: { children: ReactNode }) {
                 </Link>
               );
             })}
+            </div>
           </div>
         </header>
-        <main className="p-4 md:p-8">{children}</main>
+        {mobileMenuOpen ? (
+          <div
+            id="admin-mobile-menu"
+            className="lg:hidden"
+          >
+            <div className="fixed inset-0 z-40 bg-slate-950/35" onClick={() => setMobileMenuOpen(false)} />
+            <aside className="fixed inset-y-0 left-0 z-50 w-[84vw] max-w-sm overflow-y-auto border-r border-sky-100 bg-gradient-to-b from-slate-950 via-blue-950 to-sky-900 p-5 text-sky-50 shadow-2xl">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sky-200">CMS Dashboard</p>
+                  <h3 className="mt-1 text-base font-bold">Colombo Legacy Admin</h3>
+                </div>
+                <button
+                  type="button"
+                  className="rounded-lg border border-sky-200/40 bg-white/10 p-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+              <nav className="mt-5 space-y-2">
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={clsx(
+                        'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
+                        pathname === item.href
+                          ? 'bg-white/20 text-white shadow'
+                          : 'text-sky-100/85 hover:bg-white/10 hover:text-white',
+                      )}
+                    >
+                      <Icon size={16} />
+                      <span>{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+              <button
+                type="button"
+                className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-sky-200/40 bg-white/10 px-3 py-2 text-sm font-semibold text-sky-100 transition hover:bg-white/20"
+                onClick={() => {
+                  localStorage.removeItem('leo_admin_token');
+                  localStorage.removeItem('leo_admin_user');
+                  setMobileMenuOpen(false);
+                  router.replace('/admin/login');
+                }}
+              >
+                <LogOut size={15} />
+                Log Out
+              </button>
+            </aside>
+          </div>
+        ) : null}
+        <main className="min-w-0 p-4 md:p-8">{children}</main>
       </div>
     </div>
   );

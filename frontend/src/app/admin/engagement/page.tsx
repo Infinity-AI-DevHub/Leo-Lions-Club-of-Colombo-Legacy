@@ -236,13 +236,13 @@ export default function AdminEngagementPage() {
             </div>
 
             <div className="mt-6 glass-panel rounded-3xl p-6">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h3 className="text-lg font-semibold text-slate-900">Visitor Sessions</h3>
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search by session token, visitor id, device..."
-                  className="w-full max-w-sm rounded-xl border border-slate-300 bg-white/85 px-3 py-2.5 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                  className="w-full rounded-xl border border-slate-300 bg-white/85 px-3 py-2.5 text-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100 sm:max-w-sm"
                 />
               </div>
               <div className="mt-4 overflow-x-auto">
@@ -289,7 +289,7 @@ export default function AdminEngagementPage() {
         {selectedSessionId && selectedDetail ? (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 p-4">
             <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
-              <div className="flex items-start justify-between">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Session Timeline</p>
                   <h4 className="mt-1 text-xl font-semibold text-slate-900">{selectedDetail.session.sessionToken}</h4>
